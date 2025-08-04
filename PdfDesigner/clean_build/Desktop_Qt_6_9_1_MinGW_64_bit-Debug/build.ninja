@@ -329,7 +329,7 @@ build .rcc/qmlcache/appPdfDesigner_Main_qml.cpp .rcc/qmlcache/appPdfDesigner_Mai
 #############################################
 # Custom command for .qt\rcc\qrc_appPdfDesigner_raw_qml_0.cpp
 
-build .qt/rcc/qrc_appPdfDesigner_raw_qml_0.cpp | ${cmake_ninja_workdir}.qt/rcc/qrc_appPdfDesigner_raw_qml_0.cpp: CUSTOM_COMMAND C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/Main.qml C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/qml.qrc .qt/rcc/appPdfDesigner_raw_qml_0.qrc C$:/Qt/6.9.1/mingw_64/bin/rcc.exe || appPdfDesigner_autogen appPdfDesigner_autogen_timestamp_deps appPdfDesigner_copy_qml appPdfDesigner_copy_res appPdfDesigner_qmlimportscan
+build .qt/rcc/qrc_appPdfDesigner_raw_qml_0.cpp | ${cmake_ninja_workdir}.qt/rcc/qrc_appPdfDesigner_raw_qml_0.cpp: CUSTOM_COMMAND C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/Main.qml C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/qml.qrc C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/media/open-folder.png .qt/rcc/appPdfDesigner_raw_qml_0.qrc C$:/Qt/6.9.1/mingw_64/bin/rcc.exe || appPdfDesigner_autogen appPdfDesigner_autogen_timestamp_deps appPdfDesigner_copy_qml appPdfDesigner_copy_res appPdfDesigner_qmlimportscan
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\cenkk\Documents\Qt_Projects\PdfDesigner\clean_build\Desktop_Qt_6_9_1_MinGW_64_bit-Debug && C:\Qt\6.9.1\mingw_64\bin\rcc.exe --output C:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/clean_build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/.qt/rcc/qrc_appPdfDesigner_raw_qml_0.cpp --name appPdfDesigner_raw_qml_0 C:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/clean_build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/.qt/rcc/appPdfDesigner_raw_qml_0.qrc --no-zstd"
   DESC = Running rcc for resource appPdfDesigner_raw_qml_0
   restat = 1
@@ -406,7 +406,7 @@ build CMakeFiles/appPdfDesigner_copy_res | ${cmake_ninja_workdir}CMakeFiles/appP
 #############################################
 # Custom command for .qt\appPdfDesigner_res.txt
 
-build .qt/appPdfDesigner_res.txt | ${cmake_ninja_workdir}.qt/appPdfDesigner_res.txt: CUSTOM_COMMAND C$:/Qt/6.9.1/mingw_64/lib/cmake/Qt6Qml/Qt6QmlCopyFiles.cmake C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/qml.qrc
+build .qt/appPdfDesigner_res.txt | ${cmake_ninja_workdir}.qt/appPdfDesigner_res.txt: CUSTOM_COMMAND C$:/Qt/6.9.1/mingw_64/lib/cmake/Qt6Qml/Qt6QmlCopyFiles.cmake C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/qml.qrc C$:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/media/open-folder.png
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\cenkk\Documents\Qt_Projects\PdfDesigner\clean_build\Desktop_Qt_6_9_1_MinGW_64_bit-Debug && C:\Qt\Tools\CMake_64\bin\cmake.exe -DFILES_INFO_PATH=C:/Users/cenkk/Documents/Qt_Projects/PdfDesigner/clean_build/Desktop_Qt_6_9_1_MinGW_64_bit-Debug/.qt/appPdfDesigner_res.cmake -P C:/Qt/6.9.1/mingw_64/lib/cmake/Qt6Qml/Qt6QmlCopyFiles.cmake"
   DESC = Copying appPdfDesigner qml resources into build dir
   restat = 1
