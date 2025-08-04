@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Main.qml</file>
+        <file>media/search.svg</file>
+        <file>media/options.svg</file>
+        <file>media/send.svg</file>
+        <file>media/arrowLeft.svg</file>
+        <file>media/openFile.svg</file>
+        <file>media/zoomIn.svg</file>
+        <file>media/zoomOut.svg</file>
+        <file>media/Prolab1.pdf</file>
+    </qresource>
+</RCC>
