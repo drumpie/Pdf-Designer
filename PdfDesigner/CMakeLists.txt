@@ -43,6 +43,7 @@ qt_add_qml_module(appPdfDesigner
         RESOURCES qml.qrc
         RESOURCES
         QML_FILES
+        RESOURCES media/open-folder.png
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

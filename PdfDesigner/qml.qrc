@@ -9,5 +9,6 @@
         <file>media/zoomIn.svg</file>
         <file>media/zoomOut.svg</file>
         <file>media/Prolab1.pdf</file>
+        <file>media/open-folder.png</file>
     </qresource>
 </RCC>
