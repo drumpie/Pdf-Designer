@@ -26,6 +26,7 @@ qt_standard_project_setup(REQUIRES 6.8)
 # Class'ları buraya da tanımla
 qt_add_executable(appPdfDesigner
     main.cpp
+    # ${app_icon_resource_windows}
 )
 
 qt_add_resources(appPdfDesigner "Main.qml"
@@ -43,7 +44,11 @@ qt_add_qml_module(appPdfDesigner
         RESOURCES qml.qrc
         RESOURCES
         QML_FILES
+        RESOURCES media/open-folder.png
+        RESOURCES media/search.svg
 )
+# set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/media/pdf.ico")
+    # qt_add_executable(photosurfaceexample main.cpp ${app_icon_resource_windows})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

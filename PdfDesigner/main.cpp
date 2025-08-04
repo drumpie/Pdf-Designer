@@ -12,6 +12,8 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
+    Q_PROPERTY(int currentPage READ currentPage WRITE setCurrentPage NOTIFY currentPageChanged)
+
     QQmlApplicationEngine engine;
     QObject::connect(
         &engine,

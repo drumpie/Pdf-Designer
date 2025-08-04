@@ -23,88 +23,110 @@ ApplicationWindow {
             anchors.fill: parent
             anchors.rightMargin: 6
             ToolButton {
+                z: 4
                 action: Action {
                     shortcut: StandardKey.Open
-                    // icon.source: "qrc:/media/openFile.svg"
+
                     onTriggered: fileDialog.open()
                     text: "Open PDF"
                 }
+                // icon.source: "qrc:/media/openFile.svg"
             }
             // Zoom In Butonu
             ToolButton {
                 action: Action {
                     shortcut: StandardKey.ZoomIn
+                    // shortcut: "Ctrl+mwheelup"
                     // shortcut: "Ctrl+="
                     enabled: view.renderScale < 10
-                    icon.source: "qrc:/media/zoomIn.svg"
+                    // icon.source: "qrc:/media/zoomIn.svg"
+                    text: "Zoom In"
                     onTriggered: view.renderScale *= Math.sqrt(2)
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             // Zoom Out Butonu
             ToolButton {
                 action: Action {
                     shortcut: StandardKey.ZoomOut
                     enabled: view.renderScale > 0.1
-                    icon.source: "qrc:/media/zoomOut.svg"
+                    // icon.source: "qrc:/media/zoomOut.svg"
+                    text: "Zoom Out"
                     onTriggered: view.renderScale /= Math.sqrt(2)
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             // Scale to Width Butonu
             ToolButton {
                 action: Action {
                     // icon.source: ""
+                    text: "Scale to Width"
                     onTriggered: view.scaleToWidth(root.contentItem.width,
                                                    root.contentItem.height)
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             // Scale to Page Butonu
             ToolButton {
                 action: Action {
                     // icon.source: ""
+                    text: "Scale to Page"
                     onTriggered: view.scaleToPage(root.contentItem.width,
                                                   root.contentItem.height)
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             // Zoom Reset Butonu
             ToolButton {
                 action: Action {
                     shortcut: "Ctrl+0"
+                    text: "Zoom Reset"
                     enabled: view.renderScale > 0.1
                     // icon.source: ""
                     onTriggered: view.resetScale()
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             // Sayfayı Sola Döndürme Butonu
             ToolButton {
                 action: Action {
                     shortcut: "Ctrl+L"
+                    text: "Page to Left"
                     // icon.source: ""
                     onTriggered: view.pageRotation -= 90
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             // Sayfayı Sağa Döndürme Butonu
             ToolButton {
                 action: Action {
                     shortcut: "Ctrl+R"
+                    text: "Page to Right"
                     // icon.source: ""
                     onTriggered: view.pageRotation += 90
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
+            // Geri(Back) Butonu
             ToolButton {
                 action: Action {
                     // icon.source: ""
+                    text: "Back"
                     enabled: view.backEnabled
                     onTriggered: view.back()
                 }
                 ToolTip.visible: enabled && hovered
                 ToolTip.delay: 2000
                 ToolTip.text: "Go Back"
+                enabled: doc.status === PdfDocument.Ready
             }
             SpinBox {
                 id: currentPageSB
                 from: 1
                 to: doc.pageCount
                 editable: true
+                value: view.currentPage + 1
+                enabled: doc.status === PdfDocument.Ready
                 onValueModified: view.goToPage(value - 1)
                 Shortcut {
                     sequence: StandardKey.MoveToPreviousPage
@@ -115,8 +137,10 @@ ApplicationWindow {
                     onActivated: view.goToPage(currentPageSB.value)
                 }
             }
+
             ToolButton {
                 action: Action {
+                    text: "Forward"
                     // icon.source: ""
                     enabled: view.forwardEnabled
                     onTriggered: view.forward()
@@ -124,16 +148,20 @@ ApplicationWindow {
                 ToolTip.visible: enabled && hovered
                 ToolTip.delay: 2000
                 ToolTip.text: "Go Forward"
+                enabled: doc.status === PdfDocument.Ready
             }
             ToolButton {
                 action: Action {
+                    text: "Select All"
                     shortcut: StandardKey.SelectAll
                     // icon.source: ""
                     onTriggered: view.selectAll()
                 }
+                enabled: doc.status === PdfDocument.Ready
             }
             ToolButton {
                 action: Action {
+                    text: "Copy"
                     shortcut: StandardKey.Copy
                     // icon.source: ""
                     enabled: view.selectedText !== ""
@@ -160,14 +188,16 @@ ApplicationWindow {
                 standardButtons: Dialog.Ok | Dialog.Cancel
                 modal: true
                 closePolicy: Popup.CloseOnEscape
-                anchors.centerIn: parent
+                // anchors.centerIn: parent
                 width: 300
 
+                // Info Sekmesi
                 contentItem: TextField {
                     id: passwordField
-                    placeholderText: qsTr("Please provide the password")
+                    placeholderText: qsTr("Enter password")
                     echoMode: TextInput.Password
                     width: parent.width
+                    enabled: doc.status === PdfDocument.Ready
                     onAccepted: passwordDialog.accept()
                 }
                 onOpened: passwordField.forceActiveFocus()
@@ -183,6 +213,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 width: 300
                 visible: doc.status === PdfDocument.Error
+                opacity: enabled ? 1.0 : 0.5
 
                 contentItem: Label {
                     id: errorField
@@ -190,34 +221,26 @@ ApplicationWindow {
                 }
             }
 
-            PdfDocument {
-                id: doc
-                source: Qt.resolvedUrl(root.source)
-                onPasswordRequired: passwordDialog.open()
+            Dialog {
+                id: noPdfDialog
+                title: "PDF Not Loaded"
+                standardButtons: Dialog.Ok
+                modal: true
+                closePolicy: Popup.CloseOnEscape
+                contentItem: Label {
+                    text: "Add a PDF First."
+                    wrapMode: Text.WordWrap
+                }
             }
 
-            PdfMultiPageView {
-                id: view
-                anchors.fill: parent
-                anchors.leftMargin: sidebar.position * sidebar.width
-                document: doc
-                searchString: searchField.text
-                onCurrentPageChanged: currentPageSB.value = view.currentPage + 1
-            }
+            // Rectangle{
 
-            DropArea {
-                anchors.fill: parent
-                keys: ["text/uri-list"]
-                onEntered: drag => {
-                               drag.accepted = (drag.proposedAction === Qt.MoveAction
-                                                || drag.proposedAction === Qt.CopyAction)
-                               && drag.hasUrls && drag.urls[0].endsWith("pdf")
-                           }
-                onDropped: drop => {
-                               doc.source = drop.urls[0]
-                               drop.acceptProposedAction()
-                           }
-            }
+            // Flickable{
+            // id: flickable
+            // anchors.fill: parent
+            // contentWidth: view.implicitWidth
+            // contentHeight: view.implicitHeight
+            // clip: true
 
             // Side Bar
             Drawer {
@@ -235,6 +258,7 @@ ApplicationWindow {
                 height: root.height
                 dim: true
                 clip: true
+                z: 10
 
                 // contentHeight: parent.height
                 // contentWidth: parent.width / 2
@@ -361,10 +385,13 @@ ApplicationWindow {
                                 text: doc.modificationDate
                             }
                         }
+
+                        // Search Results Sekmesi
                         ListView {
                             id: searchResultsList
                             implicitHeight: parent.height
                             model: view.searchModel
+                            enabled: doc.status === PdfDocument.Ready
                             currentIndex: view.searchModel.currentResult
                             ScrollBar.vertical: ScrollBar {}
                             delegate: ItemDelegate {
@@ -375,7 +402,7 @@ ApplicationWindow {
                                 required property string contextAfter
                                 width: parent ? parent.width : 0
                                 RowLayout {
-                                    anchors.fill: parent
+                                    // anchors.fill: parent
                                     spacing: 0
                                     Label {
                                         text: "Page " + (resultDelegate.page + 1) + ": "
@@ -403,10 +430,13 @@ ApplicationWindow {
                                 onClicked: view.searchModel.currentResult = resultDelegate.index
                             }
                         }
+
+                        // Bookmarks Sekmesi
                         TreeView {
                             id: bookmarksTree
                             implicitHeight: parent.height
                             implicitWidth: parent.width
+                            enabled: doc.status === PdfDocument.Ready
                             columnWidthProvider: function () {
                                 return width
                             }
@@ -422,11 +452,15 @@ ApplicationWindow {
                             }
                             ScrollBar.vertical: ScrollBar {}
                         }
+
+                        // Thumbnails Sekmesi
                         GridView {
                             id: thumbnailsView
                             implicitWidth: parent.width
                             implicitHeight: parent.height
                             model: doc.pageModel
+                            enabled: doc.status === PdfDocument.Ready
+                            // opacity: enabled ? 1.0 : 0.5
                             cellWidth: width / 2
                             cellHeight: cellWidth + 10
                             delegate: Item {
@@ -471,8 +505,39 @@ ApplicationWindow {
             }
         }
     }
+    PdfDocument {
+        id: doc
+        source: Qt.resolvedUrl(root.source)
+        onPasswordRequired: passwordDialog.open()
+    }
+    PdfMultiPageView {
+        id: view
+        z: -5
+        anchors.fill: parent
+        anchors.leftMargin: sidebar.position * sidebar.width
+        width: implicitWidth
+        height: implicitHeight
+        document: doc
+        searchString: searchField.text
+        onCurrentPageChanged: currentPage.value = view.currentPageSB + 1
+    }
 
     // }
+    DropArea {
+        anchors.fill: parent
+        keys: ["text/uri-list"]
+        onEntered: drag => {
+                       drag.accepted = (drag.proposedAction === Qt.MoveAction
+                                        || drag.proposedAction === Qt.CopyAction)
+                       && drag.hasUrls && drag.urls[0].endsWith("pdf")
+                   }
+        onDropped: drop => {
+                       doc.source = drop.urls[0]
+                       drop.acceptProposedAction()
+                   }
+    }
+    // z:-2
+    //     }
 
     // FOOTER
     footer: ToolBar {
@@ -487,12 +552,19 @@ ApplicationWindow {
                     checkable: true
                     checked: sidebar.opened
                     // icon.source: checked ? ""
-                    onTriggered: sidebar.open()
+                    onTriggered: {
+                        if (doc.status === PdfDocument.Ready) {
+                            sidebar.open()
+                        } else {
+                            noPdfDialog.open()
+                        }
+                    }
                 }
                 ToolTip.visible: enabled && hovered
                 ToolTip.delay: 2000
                 ToolTip.text: "Open Sidebar"
                 text: "Open Sidebar"
+                enabled: doc.status === PdfDocument.Ready
             }
             ToolButton {
                 action: Action {
@@ -504,13 +576,16 @@ ApplicationWindow {
                 ToolTip.visible: enabled && hovered
                 ToolTip.delay: 2000
                 ToolTip.text: "Find Previous"
+                text: "Find Previous"
             }
             // Footer'daki Arama Kutusu
             TextField {
                 id: searchField
+                // icon.name: "search"
                 placeholderText: "Search"
                 Layout.alignment: parent.right
                 Layout.minimumWidth: 100
+                enabled: doc.status === PdfDocument.Ready
                 // Layout.maximumWidth: 300
                 Layout.fillWidth: true
                 Layout.bottomMargin: 3
@@ -532,7 +607,9 @@ ApplicationWindow {
                     }
                 }
             }
+
             ToolButton {
+                icon.source: "qrc:/media/zoomIn.svg"
                 action: Action {
                     // icon.source: ""
                     shortcut: StandardKey.FindNext
@@ -542,6 +619,7 @@ ApplicationWindow {
                 ToolTip.visible: enabled && hovered
                 ToolTip.delay: 2000
                 ToolTip.text: "Find Next"
+                text: "Find Next"
             }
             Label {
                 id: statusLabel
